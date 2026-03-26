@@ -40,13 +40,13 @@ PORT: int = int(os.environ.get("AGENT_PORT", "5001"))
 CORS_ORIGINS: list[str] = [
     "http://localhost:*",
     "http://127.0.0.1:*",
-    "https://yourusername.github.io",  # placeholder — update before deploy
+    "https://Avanishk05.github.io",
 ]
 
 # ---------------------------------------------------------------------------
 # Flash image paths (img/ folder — Downloaded dynamically or cached)
 # ---------------------------------------------------------------------------
-IMAGE_BASE_URL: str = "https://github.com/YOURNAME/YOURREPO/releases/download/v1.0.0/"
+IMAGE_BASE_URL: str = "https://github.com/Avanishk05/QutritWebappV1/releases/download/v1.0.0/"
 
 IMG_DIR: Path = PROJECT_ROOT / "img"
 MINILOADER_PATH: Path = IMG_DIR / "MiniLoaderAll.bin"

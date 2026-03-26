@@ -5,8 +5,9 @@ import sys
 from pathlib import Path
 
 # Build paths relative to the spec file
-spec_dir = Path('.').resolve()
-agent_root = spec_dir.parent
+import os
+spec_dir = Path(SPEC)
+agent_root = spec_dir.parent.parent
 
 # Include all submodules from agent package
 hidden_imports = collect_submodules('agent') + [
