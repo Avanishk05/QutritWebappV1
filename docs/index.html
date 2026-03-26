@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Luckfox Lyra Zero W — One-click IoT device flasher.">
+    <title>Luckfox Flasher</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Error Bar -->
+        <div id="global-error" class="status-message error hidden"></div>
+
+        <!-- Screen 0: Agent Bootstrap -->
+        <section id="screen-0" class="screen active">
+            <div class="header-caption">Step 1 of 5</div>
+            
+            <!-- State 1: Agent Not Installed -->
+            <div id="bootstrap-state-1">
+                <h1>Setup Required</h1>
+                <p>The Luckfox hardware agent is not running on your machine.</p>
+                <a href="https://github.com/YOURNAME/YOURREPO/releases/download/v1.0.0/luckfox-setup.exe" class="button" style="display:inline-block; text-align:center; text-decoration:none;">Download Luckfox Flasher (Windows)</a>
+                <p style="margin-top: 1rem; font-size: 0.875rem;">After installing, this page will continue automatically.</p>
+            </div>
+
+            <!-- State 2: Agent Running, Downloading Firmware Images -->
+            <div id="bootstrap-state-2" class="hidden">
+                <h1>Setting up your device...</h1>
+                <p>Downloading necessary OS and bootloader files.</p>
+                
+                <div id="downloads-container">
+                    <!-- Progress bars injected by app.js here -->
+                </div>
+            </div>
+
+            <!-- State 3: Ready -->
+            <div id="bootstrap-state-3" class="hidden">
+                <h1>Agent Ready</h1>
+                <p>All firmware images downloaded and verified.</p>
+            </div>
+            
+        </section>
+
+        <!-- Screen 1: Device Detection -->
+        <section id="screen-1" class="screen">
+            <div class="header-caption">Step 2 of 5</div>
+            <h1>Connect Your Board</h1>
+            <p>To flash the firmware, your device must be in MaskROM mode.</p>
+            <div class="card">
+                <div class="card-row">
+                    <span class="card-label">1. Disconnect power</span>
+                </div>
+                <div class="card-row">
+                    <span class="card-label">2. Hold the BOOT button on the board</span>
+                </div>
+                <div class="card-row">
+                    <span class="card-label">3. Plug in the USB-C cable to your PC</span>
+                </div>
+                <div class="card-row">
+                    <span class="card-label">4. Release the BOOT button</span>
+                </div>
+            </div>
+            <button id="btn-detect-device" class="button">Check for Device</button>
+        </section>
+
+        <!-- Screen 2: Flash Setup -->
+        <section id="screen-2" class="screen">
+            <div class="header-caption">Step 3 of 5</div>
+            <h1>Ready to Flash</h1>
+            <p>Device detected successfully. Please configure your WiFi network.</p>
+            
+            <div class="card">
+                <div class="card-row">
+                    <span class="card-label">Chip</span>
+                    <span id="device-chip" class="card-value">RK3506B</span>
+                </div>
+                <div class="card-row">
+                    <span class="card-label">Mode</span>
+                    <span id="device-mode" class="status-badge success">MaskROM</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <p style="margin-bottom: 0.5rem; color: var(--color-text-primary); font-weight: 500;">WiFi Configuration</p>
+                <div class="input-group">
+                    <label for="wifi-ssid">Network Name (SSID)</label>
+                    <input type="text" id="wifi-ssid" placeholder="My Network" required>
+                </div>
+                <div class="input-group" style="margin-bottom: 0;">
+                    <label for="wifi-password">Password</label>
+                    <input type="password" id="wifi-password" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button id="btn-start-flash" class="button">Flash OS Image</button>
+            <button id="btn-cancel-flash" class="button outline">Cancel</button>
+        </section>
+
+        <!-- Screen 3: Progress -->
+        <section id="screen-3" class="screen">
+            <div class="header-caption">Step 4 of 5</div>
+            <h1>Flashing Firmware...</h1>
+            <p>Do not disconnect your device or close this window.</p>
+            
+            <div class="progress-container">
+                <div id="flash-progress" class="progress-bar" style="width: 0%"></div>
+            </div>
+            
+            <div id="flash-log" class="log-viewer"></div>
+        </section>
+
+        <!-- Screen 4: WiFi Config (Waiting) -->
+        <section id="screen-4" class="screen">
+            <div class="header-caption">Step 5 of 5</div>
+            <h1>Configuring WiFi...</h1>
+            <p>Waiting for the device to reboot and configure network access.</p>
+            
+            <div class="progress-container">
+                <div id="wifi-progress" class="progress-bar" style="width: 0%; animation: pulse 2s infinite;"></div>
+            </div>
+            <p id="wifi-status" style="text-align: center; margin-top: 1rem;">Waiting for ADB device...</p>
+        </section>
+
+        <!-- Screen 5: Success -->
+        <section id="screen-5" class="screen">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <div style="width: 64px; height: 64px; background: rgba(34, 197, 94, 0.1); color: var(--color-success); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem auto; font-size: 2rem;">✓</div>
+                <h1 style="font-size: 2rem;">Flash Complete</h1>
+                <p>Your Luckfox board is ready to use.</p>
+            </div>
+            
+            <button id="btn-flash-another" class="button">Flash Another Device</button>
+        </section>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
