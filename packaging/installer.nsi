@@ -47,7 +47,7 @@ Section "Luckfox Flasher Software" SEC01
     WriteUninstaller "$INSTDIR\uninstall.exe"
     
     ; 7. Open Setup Sequence in Web Browser
-    ExecShell "open" "https://yourusername.github.io"
+    ExecShell "open" "https://Avanishk05.github.io/QutritWebappV1"
 SectionEnd
 
 Section "Uninstall"
