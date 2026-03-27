@@ -1,6 +1,6 @@
 'use strict';
 
-const API_BASE = 'http://127.0.0.1:5001/api/v1';
+const API_BASE = 'http://127.0.0.1:5001';
 
 // DOM Elements
 const d = document;
@@ -90,7 +90,7 @@ async function checkAgent() {
     showScreen(0);
     
     try {
-        const data = await apiGet('/status');
+        const data = await apiGet('/api/v1/status');
         if (data.status === 'running') {
             // Agent found! Stop polling status and switch to polling downloads.
             if (pollInterval) clearInterval(pollInterval);
@@ -111,7 +111,7 @@ async function checkAgent() {
 
 async function pollImages() {
     try {
-        const data = await apiGet('/images/status');
+        const data = await apiGet('/api/v1/images/status');
         state1.classList.add('hidden');
         
         if (data.files_ready) {
@@ -148,7 +148,7 @@ async function detectDevice() {
     btnDetectDevice.disabled = true;
     hideError();
     try {
-        const data = await apiGet('/device');
+        const data = await apiGet('/api/v1/device');
         if (data.connected && data.maskrom) {
             lblDeviceChip.textContent = data.chip;
             showScreen(2);
@@ -175,7 +175,7 @@ async function startFlash() {
     btnStartFlash.disabled = true;
     hideError();
     try {
-        await apiPost('/flash');
+        await apiPost('/api/v1/flash');
         showScreen(3);
         pollInterval = setInterval(pollLogs, 2000);
     } catch (err) {
@@ -186,7 +186,7 @@ async function startFlash() {
 
 async function pollLogs() {
     try {
-        const data = await apiGet('/logs');
+        const data = await apiGet('/api/v1/logs');
         
         flashProgress.style.width = `${data.progress}%`;
         
@@ -224,7 +224,7 @@ async function pollLogs() {
 async function configureWifi() {
     wifiStatus.textContent = "Writing network config via adb shell...";
     try {
-        await apiPost('/wifi', {
+        await apiPost('/api/v1/wifi', {
             ssid: inputSsid.value.trim(),
             password: inputPassword.value
         });
