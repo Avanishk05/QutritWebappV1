@@ -7,7 +7,7 @@
 
 ; Install to 64-bit Program Files
 InstallDir "$PROGRAMFILES64\LuckfoxFlasher"
-OutFile "dist\luckfox-setup.exe"
+OutFile "..\dist\luckfox-setup.exe"
 Name "Luckfox Flasher"
 RequestExecutionLevel admin
 
@@ -17,7 +17,7 @@ SilentInstall silent
 Section "Luckfox Flasher Software" SEC01
     ; 1. Extract application payload
     SetOutPath "$INSTDIR"
-    File /r "dist\luckfox-agent\*"
+    File /r "..\dist\luckfox-agent\*"
     
     ; 2. Install Rockchip USB Driver Silently
     DetailPrint "Installing Rockchip USB Driver..."

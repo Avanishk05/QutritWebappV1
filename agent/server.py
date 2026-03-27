@@ -7,6 +7,7 @@ All routers under /api/v1 prefix.
 
 import asyncio
 import sys
+import os
 import uvicorn
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -21,9 +22,12 @@ from agent.services.image_manager import download_missing_images_task
 async def lifespan(app: FastAPI):
     """Lifecycle events for the FastAPI application."""
     print(f"[{APP_NAME}] Starting up...", flush=True)
-    # Start background download automatically
+
+    # Start background image download task
     asyncio.create_task(download_missing_images_task())
+
     yield
+
     print(f"[{APP_NAME}] Shutting down...", flush=True)
 
 
@@ -34,7 +38,7 @@ app = FastAPI(
     description="Local agent for flashing Rockchip IoT devices via rkdeveloptool.",
 )
 
-# CORS security wrapper explicitly limited in config.py
+# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
@@ -48,17 +52,27 @@ app.include_router(status.router, prefix="/api/v1", tags=["Device Status"])
 app.include_router(device.router, prefix="/api/v1", tags=["Subprocess Flash Logic"])
 app.include_router(flash.router, prefix="/api/v1", tags=["Flashing"])
 app.include_router(wifi.router, prefix="/api/v1", tags=["WiFi Injector via ADB"])
-app.include_router(images.router, prefix="/api/v1", tags=["Image Downsloader"])
+app.include_router(images.router, prefix="/api/v1", tags=["Image Downloader"])
 
 
 def start() -> None:
-    """Launch the uvicorn server."""
+    """Launch the uvicorn server (PyInstaller-safe)."""
+
+    # 🔥 CRITICAL FIX 1: Handle missing stdout/stderr (no-console EXE)
+    if sys.stdout is None:
+        sys.stdout = open(os.devnull, "w")
+    if sys.stderr is None:
+        sys.stderr = open(os.devnull, "w")
+
     print(f"Starting {APP_NAME} on http://{HOST}:{PORT}/api/v1/status")
+
+    # 🔥 CRITICAL FIX 2: Disable uvicorn logging config (prevents crash)
     uvicorn.run(
         "agent.server:app",
         host=HOST,
         port=PORT,
         reload=False,
+        log_config=None,   # 🔥 VERY IMPORTANT
     )
 
 

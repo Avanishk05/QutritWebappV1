@@ -38,9 +38,9 @@ PORT: int = int(os.environ.get("AGENT_PORT", "5001"))
 # CORS allowed origins
 # ---------------------------------------------------------------------------
 CORS_ORIGINS: list[str] = [
-    "http://localhost:*",
-    "http://127.0.0.1:*",
-    "https://Avanishk05.github.io",
+    "http://localhost",
+    "http://127.0.0.1",
+    "https://avanishk05.github.io",   
 ]
 
 # ---------------------------------------------------------------------------
